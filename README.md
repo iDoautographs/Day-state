@@ -1,4 +1,4 @@
-# Day State Selector
+# Day State Selector - Static Deploy
 
 Public static Day State web app.
 
@@ -9,8 +9,8 @@ Public static Day State web app.
 - automatic browser save with localStorage
 - JSON export
 
-## Live URL
-https://idoautographs.github.io/day-state/
+## GitHub Pages
+A Pages workflow is included in .github/workflows/pages.yml
 
-## Local project path
-E:\PROJECTS\day-state
+## Expected live URL
+https://idoautographs.github.io/day-state/

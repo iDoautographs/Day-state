@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Day State Selector</title>
-  <meta name="description" content="A mobile-friendly day state selector with 8 categories.">
+  <meta name="description" content="A mobile-friendly day-state selector with eight categories." />
   <style>
     :root{
       --bg:#0b0f14;
@@ -17,15 +17,14 @@
       --accent:#7dd3fc;
       --accent2:#38bdf8;
       --chip:#163447;
-      --good:#16a34a;
       --danger:#dc2626;
       --shadow:0 10px 30px rgba(0,0,0,.28);
       --radius:22px;
     }
-    * { box-sizing:border-box; }
-    html, body { margin:0; padding:0; }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
     body{
-      font-family: Arial, Helvetica, sans-serif;
+      font-family:Arial,Helvetica,sans-serif;
       background:
         radial-gradient(circle at top, rgba(56,189,248,.12), transparent 30%),
         linear-gradient(180deg, var(--bg), var(--bg2));
@@ -33,11 +32,11 @@
       min-height:100vh;
     }
     .wrap{
-      width:min(860px, 100%);
+      width:min(860px,100%);
       margin:0 auto;
       padding:18px 14px 40px;
     }
-    .hero{ margin-bottom:14px; }
+    .hero{margin-bottom:14px}
     .eyebrow{
       color:var(--accent);
       font-size:13px;
@@ -46,7 +45,7 @@
       margin-bottom:8px;
     }
     .title{
-      font-size:clamp(28px, 5vw, 42px);
+      font-size:clamp(28px,5vw,42px);
       font-weight:800;
       line-height:1.05;
       margin:0 0 10px;
@@ -64,6 +63,12 @@
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       padding:16px;
+    }
+    .toolbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
     }
     .topbar{
       display:flex;
@@ -146,7 +151,7 @@
       cursor:pointer;
       transition:.15s ease;
     }
-    .btn:hover{ transform:translateY(-1px); }
+    .btn:hover{transform:translateY(-1px)}
     .btn.secondary{
       background:#202a39;
       color:var(--text);
@@ -201,12 +206,6 @@
       margin-top:14px;
       line-height:1.45;
     }
-    .toolbar{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:12px;
-    }
     .toast{
       position:fixed;
       left:50%;
@@ -223,10 +222,10 @@
       font-weight:700;
     }
     @media (max-width:560px){
-      .wrap{ padding:14px 12px 32px; }
-      .question{ font-size:24px; }
-      .word{ font-size:14px; padding:13px 8px; }
-      .actions .btn{ flex:1 1 auto; }
+      .wrap{padding:14px 12px 32px}
+      .question{font-size:24px}
+      .word{font-size:14px;padding:13px 8px}
+      .actions .btn{flex:1 1 auto}
     }
   </style>
 </head>
@@ -243,7 +242,7 @@
     </div>
 
     <p class="footer-note">
-      Static deploy version. Good for GitHub Pages and public portfolio use.
+      Static deploy version. Good for GitHub Pages and portfolio use.
     </p>
   </div>
 
