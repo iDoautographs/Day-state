@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Day State Selector</title>
+  <meta name="description" content="A mobile-friendly day state selector with 8 categories.">
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --bg2:#111722;
+      --card:#141b26;
+      --card2:#1a2431;
+      --text:#eef4fb;
+      --muted:#a4b1c2;
+      --line:#2a3748;
+      --accent:#7dd3fc;
+      --accent2:#38bdf8;
+      --chip:#163447;
+      --good:#16a34a;
+      --danger:#dc2626;
+      --shadow:0 10px 30px rgba(0,0,0,.28);
+      --radius:22px;
+    }
+    * { box-sizing:border-box; }
+    html, body { margin:0; padding:0; }
+    body{
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(56,189,248,.12), transparent 30%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      color:var(--text);
+      min-height:100vh;
+    }
+    .wrap{
+      width:min(860px, 100%);
+      margin:0 auto;
+      padding:18px 14px 40px;
+    }
+    .hero{ margin-bottom:14px; }
+    .eyebrow{
+      color:var(--accent);
+      font-size:13px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+    .title{
+      font-size:clamp(28px, 5vw, 42px);
+      font-weight:800;
+      line-height:1.05;
+      margin:0 0 10px;
+    }
+    .subtitle{
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.45;
+      margin:0;
+      max-width:680px;
+    }
+    .card{
+      background:rgba(20,27,38,.94);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:12px;
+      flex-wrap:wrap;
+    }
+    .step{
+      color:var(--muted);
+      font-size:14px;
+    }
+    .progress{
+      width:100%;
+      height:10px;
+      background:#0e1520;
+      border:1px solid var(--line);
+      border-radius:999px;
+      overflow:hidden;
+      margin:6px 0 18px;
+    }
+    .progress-fill{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg, var(--accent), var(--accent2));
+      transition:width .2s ease;
+    }
+    .question{
+      font-size:28px;
+      font-weight:800;
+      margin:0 0 8px;
+    }
+    .sub{
+      color:var(--muted);
+      margin:0 0 18px;
+      font-size:15px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+    }
+    .word{
+      width:100%;
+      border:1px solid var(--line);
+      background:var(--card2);
+      color:var(--text);
+      border-radius:16px;
+      padding:14px 10px;
+      font-size:15px;
+      font-weight:600;
+      cursor:pointer;
+      transition:.15s ease;
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
+    }
+    .word:hover{
+      transform:translateY(-1px);
+      border-color:#3b4d63;
+    }
+    .word.active{
+      background:linear-gradient(180deg, rgba(56,189,248,.22), rgba(56,189,248,.12));
+      border-color:var(--accent2);
+      color:#f4fbff;
+      box-shadow:0 0 0 1px rgba(56,189,248,.2) inset;
+    }
+    .actions{
+      display:flex;
+      gap:10px;
+      margin-top:18px;
+      flex-wrap:wrap;
+    }
+    button.btn{
+      border:none;
+      border-radius:16px;
+      padding:14px 16px;
+      font-size:15px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.15s ease;
+    }
+    .btn:hover{ transform:translateY(-1px); }
+    .btn.secondary{
+      background:#202a39;
+      color:var(--text);
+    }
+    .btn.ghost{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid var(--line);
+    }
+    .btn.primary{
+      background:linear-gradient(180deg, var(--accent), var(--accent2));
+      color:#06131b;
+    }
+    .btn.danger{
+      background:#3a1a1f;
+      color:#ffdce0;
+      border:1px solid #5a232c;
+    }
+    .summary-block{
+      border:1px solid var(--line);
+      background:var(--card2);
+      border-radius:18px;
+      padding:14px;
+      margin-bottom:12px;
+    }
+    .summary-title{
+      font-size:18px;
+      font-weight:800;
+      margin-bottom:10px;
+    }
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .chip{
+      background:var(--chip);
+      border:1px solid #24526f;
+      color:#dff6ff;
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:700;
+    }
+    .empty{
+      color:var(--muted);
+      font-style:italic;
+    }
+    .footer-note{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:14px;
+      line-height:1.45;
+    }
+    .toolbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      background:#0c7a37;
+      color:white;
+      padding:12px 14px;
+      border-radius:14px;
+      box-shadow:var(--shadow);
+      display:none;
+      z-index:9999;
+      font-size:14px;
+      font-weight:700;
+    }
+    @media (max-width:560px){
+      .wrap{ padding:14px 12px 32px; }
+      .question{ font-size:24px; }
+      .word{ font-size:14px; padding:13px 8px; }
+      .actions .btn{ flex:1 1 auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div class="eyebrow">Day State</div>
+      <h1 class="title">Choose the words you want to start from.</h1>
+      <p class="subtitle">Eight categories. Tap as many words as you want. Your selections save in this browser automatically.</p>
+    </div>
+
+    <div class="card">
+      <div id="app"></div>
+    </div>
+
+    <p class="footer-note">
+      Static deploy version. Good for GitHub Pages and public portfolio use.
+    </p>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const categories = [
+      {
+        key: "Virtue",
+        title: "Virtue for the day",
+        words: [
+          "Discipline","Patience","Courage","Integrity","Honesty","Humility","Fairness","Self-control","Responsibility","Reliability",
+          "Perseverance","Fortitude","Compassion","Mercy","Justice","Temperance","Kindness","Respect","Loyalty","Honor",
+          "Moderation","Diligence","Sincerity","Grace","Decency","Consistency","Restraint","Accountability","Truthfulness","Faithfulness"
+        ]
+      },
+      {
+        key: "Perception",
+        title: "Perception for the day",
+        words: [
+          "Clarity","Awareness","Presence","Curiosity","Openness","Acceptance","Precision","Wonder","Sensitivity","Objectivity",
+          "Discernment","Alertness","Non-judgment","Receptivity","Insight","Observation","Perspective","Attunement","Stillness","Depth",
+          "Breadth","Recognition","Attention","Focus","Softness","Subtlety","Groundedness","Readiness","Realism","Understanding"
+        ]
+      },
+      {
+        key: "Mind",
+        title: "Mind for the day",
+        words: [
+          "Focused","Analytical","Strategic","Creative","Reflective","Logical","Adaptive","Observant","Inventive","Decisive",
+          "Intentional","Systematic","Calm","Organized","Expansive","Curious","Sharp","Disciplined","Open-minded","Practical",
+          "Visionary","Methodical","Resilient","Precise","Experimental","Steady","Innovative","Thoughtful","Pattern-seeing","Philosophical"
+        ]
+      },
+      {
+        key: "Energy",
+        title: "Energy for the day",
+        words: [
+          "Steady","Calm","Grounded","Balanced","Light","Controlled","Centered","Charged","Relaxed","Strong",
+          "Stable","Flowing","Smooth","Clear","Persistent","Gentle","Focused","Resilient","Patient","Warm",
+          "Quiet","Radiant","Composed","Rested","Lively","Fresh","Deliberate","Measured","Awake","Ready"
+        ]
+      },
+      {
+        key: "Emotion",
+        title: "Emotion for the day",
+        words: [
+          "Gratitude","Peace","Stability","Confidence","Joy","Contentment","Determination","Hope","Warmth","Ease",
+          "Trust","Love","Appreciation","Relief","Courage","Calm","Optimism","Boldness","Satisfaction","Compassion",
+          "Patience","Cheerfulness","Tenderness","Humility","Security","Wonder","Acceptance","Friendliness","Delight","Harmony"
+        ]
+      },
+      {
+        key: "Action",
+        title: "Action for the day",
+        words: [
+          "Consistent","Organized","Precise","Deliberate","Efficient","Methodical","Proactive","Thorough","Intentional","Disciplined",
+          "Practical","Measured","Timely","Sharp","Committed","Reliable","Structured","Purposeful","Patient","Decisive",
+          "Sustained","Fast","Adaptable","Responsive","Careful","Systematic","Direct","Bold","Minimal","Finish-oriented"
+        ]
+      },
+      {
+        key: "Social",
+        title: "Social for the day",
+        words: [
+          "Respectful","Assertive","Patient","Observant","Supportive","Friendly","Honest","Calm","Leader-like","Understanding",
+          "Cooperative","Clear","Boundaried","Warm","Direct","Gentle","Receptive","Attentive","Polite","Encouraging",
+          "Protective","Kind","Balanced","Present","Trustworthy","Composed","Fair","Diplomatic","Engaged","Tactful"
+        ]
+      },
+      {
+        key: "Purpose",
+        title: "Purpose for the day",
+        words: [
+          "Growth","Mastery","Self-evolution","Discipline path","Long-term vision","Exploration","Learning","Building","Creating","Service",
+          "Contribution","Discovery","Refinement","Progress","Excellence","Craft","Alignment","Meaning","Development","Expansion",
+          "Understanding","Achievement","Mission","Dedication","Truth","Practice","Improvement","Legacy","Impact","Integration"
+        ]
+      }
+    ];
+
+    const STORAGE_KEY = "day-state-selector-v1";
+    let index = 0;
+    let selections = {};
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#39;");
+    }
+
+    function showToast(message){
+      const t = document.getElementById("toast");
+      t.textContent = message;
+      t.style.display = "block";
+      setTimeout(() => t.style.display = "none", 1800);
+    }
+
+    function saveLocal(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        index,
+        selections,
+        savedAt: new Date().toISOString()
+      }));
+    }
+
+    function loadLocal(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw){
+          categories.forEach(c => selections[c.key] = []);
+          return;
+        }
+        const parsed = JSON.parse(raw);
+        index = Number.isInteger(parsed.index) ? parsed.index : 0;
+        categories.forEach(c => {
+          selections[c.key] = Array.isArray(parsed.selections?.[c.key]) ? parsed.selections[c.key] : [];
+        });
+      }catch{
+        categories.forEach(c => selections[c.key] = []);
+        index = 0;
+      }
+    }
+
+    function clearAll(){
+      if(!confirm("Clear all saved selections?")) return;
+      index = 0;
+      categories.forEach(c => selections[c.key] = []);
+      saveLocal();
+      render();
+      showToast("Cleared");
+    }
+
+    function exportJson(){
+      const payload = {
+        exportedAt: new Date().toISOString(),
+        selections
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const stamp = new Date().toISOString().replaceAll(":","-");
+      a.href = url;
+      a.download = "day-state-" + stamp + ".json";
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast("Exported JSON");
+    }
+
+    function randomizeCurrent(){
+      const c = categories[index];
+      const count = Math.floor(Math.random() * 3) + 1;
+      const shuffled = [...c.words].sort(() => Math.random() - 0.5);
+      selections[c.key] = shuffled.slice(0, count);
+      saveLocal();
+      render();
+    }
+
+    function randomizeAll(){
+      categories.forEach(c => {
+        const count = Math.floor(Math.random() * 3) + 1;
+        const shuffled = [...c.words].sort(() => Math.random() - 0.5);
+        selections[c.key] = shuffled.slice(0, count);
+      });
+      index = categories.length;
+      saveLocal();
+      render();
+    }
+
+    function toggleWord(key, word){
+      let arr = selections[key] || [];
+      if(arr.includes(word)){
+        arr = arr.filter(x => x !== word);
+      } else {
+        arr = [...arr, word];
+      }
+      selections[key] = arr;
+      saveLocal();
+      render();
+    }
+
+    function goNext(){
+      if(index < categories.length) index++;
+      saveLocal();
+      render();
+    }
+
+    function goBack(){
+      if(index > 0) index--;
+      saveLocal();
+      render();
+    }
+
+    function renderSummary(){
+      const app = document.getElementById("app");
+
+      const blocks = categories.map(c => {
+        const vals = selections[c.key] || [];
+        const chips = vals.length
+          ? '<div class="chips">' + vals.map(v => '<span class="chip">' + escapeHtml(v) + '</span>').join('') + '</div>'
+          : '<div class="empty">No words selected.</div>';
+        return `
+          <div class="summary-block">
+            <div class="summary-title">${escapeHtml(c.key)}</div>
+            ${chips}
+          </div>
+        `;
+      }).join("");
+
+      app.innerHTML = `
+        <div class="toolbar">
+          <button class="btn ghost" onclick="goBack()">Back</button>
+          <button class="btn secondary" onclick="randomizeAll()">Randomize All</button>
+          <button class="btn secondary" onclick="exportJson()">Export JSON</button>
+          <button class="btn danger" onclick="clearAll()">Clear</button>
+        </div>
+
+        <div class="topbar">
+          <div class="step">Complete</div>
+          <div class="step">Summary</div>
+        </div>
+
+        <div class="progress">
+          <div class="progress-fill" style="width:100%"></div>
+        </div>
+
+        <h2 class="question">Day State Summary</h2>
+        <p class="sub">Review the stack you built. It is already saved in this browser.</p>
+
+        ${blocks}
+      `;
+    }
+
+    function renderQuestion(){
+      const c = categories[index];
+      const picked = selections[c.key] || [];
+      const progress = ((index) / categories.length) * 100;
+
+      const wordsHtml = c.words.map(w => {
+        const active = picked.includes(w) ? "active" : "";
+        return `<button class="word ${active}" onclick="toggleWord(${JSON.stringify(c.key)}, ${JSON.stringify(w)})">${escapeHtml(w)}</button>`;
+      }).join("");
+
+      document.getElementById("app").innerHTML = `
+        <div class="toolbar">
+          <button class="btn ghost" onclick="clearAll()">Clear</button>
+          <button class="btn secondary" onclick="randomizeCurrent()">Random</button>
+          <button class="btn secondary" onclick="exportJson()">Export JSON</button>
+        </div>
+
+        <div class="topbar">
+          <div class="step">Category ${index + 1} / ${categories.length}</div>
+          <div class="step">${escapeHtml(c.key)}</div>
+        </div>
+
+        <div class="progress">
+          <div class="progress-fill" style="width:${progress}%"></div>
+        </div>
+
+        <h2 class="question">${escapeHtml(c.title)}</h2>
+        <p class="sub">Tap as many words as you want.</p>
+
+        <div class="grid">${wordsHtml}</div>
+
+        <div class="actions">
+          ${index > 0 ? '<button class="btn ghost" onclick="goBack()">Back</button>' : ''}
+          <button class="btn primary" onclick="goNext()">${index === categories.length - 1 ? 'Finish' : 'Next'}</button>
+        </div>
+      `;
+    }
+
+    function render(){
+      if(index >= categories.length){
+        renderSummary();
+      } else {
+        renderQuestion();
+      }
+    }
+
+    loadLocal();
+    render();
+  </script>
+</body>
+</html>
